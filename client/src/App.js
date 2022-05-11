@@ -1,5 +1,6 @@
 import "./App.css";
 import { useState } from "react";
+// import StripeCheckout from "react-stripe-checkout";
 import StripeCheckout from "react-stripe-checkout";
 import axios from "axios";
 // import { toast } from "react-toastify";
@@ -14,20 +15,37 @@ function App() {
     description: "This is a sample book",
   });
 
-  const handleToken = (token, addresses) => {
-    const response = axios.post("http://localhost:8080/checkout", {
-      token,
-      product,
-    });
-    console.log(response.status);
+  // const handleToken = (token, addresses) => {
+  //   const response = axios.post("http://localhost:8080/checkout", {
+  //     token,
+  //     product,
+  //   });
+  //   console.log(response.status);
 
-    if (response.status === 200) {
-      toast("Success! Check email for details", { type: "success" });
-      <ToastContainer />;
-    } else {
-      toast("Something went wrong", { type: "error" });
-      <ToastContainer />;
-    }
+  //   if (response.status === 200) {
+  //     console.log("Success! Check email for details");
+  //     toast("Success! Check email for details", { type: "success" });
+  //     <ToastContainer />;
+  //   } else {
+  //     console.log("Something went wrong");
+  //     toast("Something went wrong", { type: "error" });
+  //     <ToastContainer />;
+  //   }
+  // };
+
+  const handleToken = (token) => {
+    axios
+      .post("http://localhost:8080/checkout", { token, product })
+      .then((res) => {
+        if (res.status === 200) {
+          toast("Success! Check email for details", { type: "success" });
+          <ToastContainer />;
+        } else {
+          toast("Something went wrong", { type: "error" });
+          <ToastContainer />;
+        }
+      })
+      .catch((er) => {});
   };
 
   return (
@@ -55,9 +73,6 @@ function App() {
             token={handleToken}
             amount={product.price * 200}
             name="Sample Book"
-            shippingAddress
-            billingAddress={false}
-            currency="lkr"
             email="project2020sliit@gmail.com"
             // billingAddress
             // shippingAddress
